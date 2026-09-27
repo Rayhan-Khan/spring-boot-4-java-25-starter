@@ -1,0 +1,92 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '4.1.1'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+group = 'com.mss'
+version = '0.0.1-SNAPSHOT'
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(25)
+	}
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	mockitoAgent
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	//Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+	//validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'com.google.code.gson:gson:2.11.0'
+	//DB
+	implementation 'org.postgresql:postgresql'
+	//Auto migration tool
+	implementation 'org.springframework.boot:spring-boot-starter-flyway'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1'
+	//mapper
+	implementation 'org.mapstruct:mapstruct:1.6.3'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+	//lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// QueryDSL (maintained OpenFeign fork, same com.querydsl packages)
+	implementation "io.github.openfeign.querydsl:querydsl-jpa:7.7"
+	annotationProcessor "io.github.openfeign.querydsl:querydsl-apt:7.7:jpa"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+	// Integration tests against a throwaway PostgreSQL (skipped when Docker is not running)
+	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+	testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
+	testImplementation 'org.testcontainers:testcontainers-postgresql'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	mockitoAgent('org.mockito:mockito-core') {
+		transitive = false
+	}
+
+	//Firebase
+	implementation 'com.google.firebase:firebase-admin:9.10.0'
+
+	implementation 'org.apache.tika:tika-core:3.0.0'
+
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+	// Load Mockito as a Java agent; newer JDKs block agents that attach themselves at runtime
+	jvmArgs "-javaagent:${configurations.mockitoAgent.asPath}", '-Xshare:off'
+}
+
+// Only build the executable Spring Boot jar (no extra *-plain.jar)
+tasks.named('jar') {
+	enabled = false
+}
+
+// Local runs use the dev profile unless SPRING_PROFILES_ACTIVE says otherwise.
+// `java -jar` and Docker start without it and get the production-safe defaults.
+tasks.named('bootRun') {
+	systemProperty 'spring.profiles.active', System.getenv('SPRING_PROFILES_ACTIVE') ?: 'dev'
+}

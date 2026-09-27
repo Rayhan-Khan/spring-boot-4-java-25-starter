@@ -1,0 +1,17 @@
+# Keep secrets and build output out of the Docker build context
+.env
+.env.*
+firebase-service-account*.json
+*.pem
+*.p12
+*.jks
+
+.git
+.gradle
+build
+.idea
+.vscode
+*.iml
+docs
+scripts
+*.md

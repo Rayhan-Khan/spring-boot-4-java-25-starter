@@ -1,0 +1,5 @@
+# Shell scripts must keep LF line endings to run on Linux servers and in Docker
+/gradlew        text eol=lf
+*.sh            text eol=lf
+*.bat           text eol=crlf
+*.jar           binary

@@ -1,0 +1,23 @@
+# Local PostgreSQL for development. Reads DB_NAME, DB_USER, DB_PASSWORD and DB_PORT from .env.
+#   Start: docker compose -f docker-compose.dev.yml up -d
+#   Stop:  docker compose -f docker-compose.dev.yml down      (add -v to also delete the data)
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres-data:

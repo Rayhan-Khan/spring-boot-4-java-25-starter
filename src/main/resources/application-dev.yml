@@ -1,0 +1,16 @@
+# Local development overrides. Never enable this profile in production:
+# it returns stack traces to API clients and logs SQL.
+
+server:
+  error:
+    include-stacktrace: always
+
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+logging:
+  level:
+    com.mss.base: DEBUG
