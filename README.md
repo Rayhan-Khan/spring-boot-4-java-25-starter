@@ -232,7 +232,7 @@ To test new endpoints end to end, extend `AbstractIntegrationTest` (see `JwtOnly
 ## 🗂 Project Structure
 
 ```
-src/main/java/com/mss/base
+src/main/java/com/rayhan/base
 ├── BaseApplication.java  Application entry point
 ├── annotation/           Custom validation annotations (@ValidEmail, @ValidAvatar, @ValidEnum)
 ├── config/               App, Firebase, OpenAPI configuration and AuthSettings (login switches)

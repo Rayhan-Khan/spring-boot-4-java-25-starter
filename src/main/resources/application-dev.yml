@@ -13,4 +13,4 @@ spring:
 
 logging:
   level:
-    com.mss.base: DEBUG
+    com.rayhan.base: DEBUG
