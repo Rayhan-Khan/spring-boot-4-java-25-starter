@@ -107,7 +107,7 @@ Settings come from environment variables. The `.env` file in the working directo
 |---|---|---|
 | `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | yes | PostgreSQL connection |
 | `DB_SCHEMA` | yes | Schema for all tables (created by Flyway) |
-| `JWT_ENABLED`, `FIREBASE_ENABLED` | no | Login methods, see [Authentication](#-authentication) (both default `true`) |
+| `JWT_ENABLED`, `FIREBASE_ENABLED` | no | Login methods, see [Authentication](#-authentication) (`.env.example` enables JWT only; `application.yml` defaults both to `true` when omitted) |
 | `JWT_SECRET` | when `JWT_ENABLED=true` | Base64, at least 256 bits: `openssl rand -base64 48`. Use a different one per project and environment |
 | `BUCKET_NAME` | when `FIREBASE_ENABLED=true` | Firebase Storage bucket |
 | `CORS_ALLOWED_ORIGINS` | no | Frontend origins allowed to call the API (default `http://localhost:3000`) |
@@ -269,16 +269,18 @@ docs/                       Implementation plans
 ```bash
 docker compose up -d --build
 ```
+When `FIREBASE_ENABLED=true`, save `firebase-service-account.json` beside this file and run `docker compose -f docker-compose.yml -f docker-compose.firebase.yml up -d --build` instead.
+
 - The image is built with JDK 25 and runs on a JRE 25 Alpine image as a non-root user.
 - It has a health check on `/actuator/health`, and the heap size follows the container's memory limit.
-- `.env` provides the settings. `firebase-service-account.json` is mounted read-only; it is never copied into the image.
+- `.env` provides the settings. The Firebase overlay mounts the key read-only only when requested; the key is never copied into the image.
 
 **Deploy script** (on the server, inside the project folder):
 ```bash
-bash deploy.sh            # pulls the develop branch, rebuilds, restarts
-bash deploy.sh main       # or another branch
+bash deploy.sh            # pulls the main branch, rebuilds, restarts
+bash deploy.sh my-branch  # or another branch
 ```
-It only removes dangling images afterwards; other applications' containers, images and volumes on the server are left alone.
+It selects the Firebase overlay automatically when `.env` enables Firebase. It only removes dangling images afterwards; other applications' containers, images and volumes on the server are left alone.
 
 ---
 
@@ -305,7 +307,7 @@ sudo usermod -aG docker $USER      # log out and back in to use docker without s
    ```
 
 **Configure and start**
-1. Create `.env` from `.env.example` and copy `firebase-service-account.json` into the project folder.
+1. Create `.env` from `.env.example`. If enabling Firebase, also copy `firebase-service-account.json` into the project folder.
 2. Run `bash deploy.sh`.
 3. Check with `docker compose ps` and `curl http://localhost:8000/actuator/health`.
 

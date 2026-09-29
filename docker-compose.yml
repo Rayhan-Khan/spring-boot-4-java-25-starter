@@ -9,8 +9,6 @@ services:
     container_name: base_project_container
     env_file:
       - .env
-    volumes:
-      - ./firebase-service-account.json:/app/firebase-service-account.json:ro
     restart: always
     ports:
       - "8000:8000"

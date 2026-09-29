@@ -1,0 +1,5 @@
+# Add this file when FIREBASE_ENABLED=true so the service account is available in the container.
+services:
+  app:
+    volumes:
+      - ./firebase-service-account.json:/app/firebase-service-account.json:ro
