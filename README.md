@@ -15,6 +15,7 @@
 - [API Conventions](#-api-conventions)
 - [Database Migrations](#-database-migrations)
 - [Testing](#-testing)
+- [Dependency Updates](#-dependency-updates)
 - [Project Structure](#-project-structure)
 - [Deployment](#-deployment)
 - [Server Setup (Ubuntu 24.04)](#-server-setup-ubuntu-2404)
@@ -25,8 +26,8 @@
 
 | Area | Technology |
 |---|---|
-| Language / build | Java 25, Gradle 9 (wrapper included) |
-| Framework | Spring Boot 4.1 (Spring MVC, Spring Security 7, Spring Data JPA / Hibernate 7) |
+| Language / build | Java 25, Gradle 9.8 (wrapper included) |
+| Framework | Spring Boot 4.1.1 (Spring MVC, Spring Security 7, Spring Data JPA / Hibernate 7) |
 | Database | PostgreSQL, Flyway migrations, QueryDSL 7 (OpenFeign fork) |
 | Auth & storage | Email/password with the app's own JWTs (jjwt, BCrypt) and/or Firebase Admin SDK (ID tokens, Cloud Storage) |
 | API docs | springdoc-openapi 3 (Swagger UI) |
@@ -36,6 +37,10 @@
 Also on the classpath for later use: Spring Mail, MapStruct, Apache Tika, Gson.
 
 ---
+
+## 🔄 Dependency Updates
+
+Spring Boot 4.1.1 manages compatible versions of most runtime and test libraries through its BOM. Keep that BOM in place when updating the template. `build.gradle` temporarily overrides Jackson 2, Jackson 3, and Tomcat to fixed patch releases because the BOM versions have published advisories; remove those overrides when a Spring Boot maintenance release includes the fixes. Directly pinned libraries and the Gradle wrapper were checked against stable Maven Central releases on 29 September 2026. Run `./gradlew test` after every dependency update.
 
 ## ⚡ Quick Start
 

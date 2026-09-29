@@ -5,6 +5,12 @@ plugins {
 }
 group = 'com.rayhan'
 version = '0.0.1-SNAPSHOT'
+
+// Temporary Spring Boot 4.1.1 BOM overrides for fixed Jackson and Tomcat patches.
+// Remove once a Spring Boot maintenance release manages these versions or newer.
+ext['jackson-2-bom.version'] = '2.21.7'
+ext['jackson-bom.version'] = '3.1.7'
+ext['tomcat.version'] = '11.0.26'
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(25)
@@ -34,7 +40,7 @@ dependencies {
 	//validation
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	implementation 'com.google.code.gson:gson:2.11.0'
+	implementation 'com.google.code.gson:gson:2.14.0'
 	//DB
 	implementation 'org.postgresql:postgresql'
 	//Auto migration tool
@@ -68,9 +74,9 @@ dependencies {
 	}
 
 	//Firebase
-	implementation 'com.google.firebase:firebase-admin:9.10.0'
+	implementation 'com.google.firebase:firebase-admin:9.11.0'
 
-	implementation 'org.apache.tika:tika-core:3.0.0'
+	implementation 'org.apache.tika:tika-core:4.0.0'
 
 }
 
